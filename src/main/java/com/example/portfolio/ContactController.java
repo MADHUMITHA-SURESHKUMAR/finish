@@ -8,12 +8,7 @@ import org.springframework.web.bind.annotation.*;
 public class ContactController {
 
     @PostMapping("/contact")
-    public String saveContact(@RequestBody Contact contact) {
-
-        System.out.println(contact.getName());
-        System.out.println(contact.getEmail());
-        System.out.println(contact.getMessage());
-
-        return "Message received successfully!";
+    public String save(@RequestBody Contact contact) {
+        return "Message received";
     }
 }
