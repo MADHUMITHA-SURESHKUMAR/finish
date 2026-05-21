@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>My Portfolio</title>
+<link rel="manifest" href="/manifest.json">
+
+    <style>
+        /* BASIC STYLE (so it looks good even without external CSS) */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #0f172a;
+            color: white;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 50px;
+            background-color: #111827;
+            position: sticky;
+            top: 0;
+        }
+
+        header h2 {
+            color: #38bdf8;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 15px;
+        }
+
+        nav a:hover {
+            color: #38bdf8;
+        }
+
+        section {
+            padding: 60px 50px;
+        }
+
+        /* HERO */
+        .hero {
+            text-align: center;
+            padding: 120px 20px;
+        }
+
+        .hero h1 {
+            font-size: 45px;
+            color: #38bdf8;
+        }
+
+        .btn {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 12px 20px;
+            background: #38bdf8;
+            color: black;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .btn:hover {
+            background: white;
+        }
+
+        /* PROJECTS */
+        #projects div {
+            background: #1f2937;
+            padding: 15px;
+            margin-top: 10px;
+            border-radius: 8px;
+        }
+
+        /* CONTACT */
+        input, textarea {
+            width: 300px;
+            padding: 10px;
+            margin: 5px 0;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: #38bdf8;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: white;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <header>
+        <h2>My Portfolio</h2>
+
+        <nav>
+            <a href="#home">Home</a>
+            <a href="#about">About</a>
+            <a href="#skills">Skills</a>
+            <a href="#projects">Projects</a>
+            <a href="#contact">Contact</a>
+        </nav>
+    </header>
+
+    <!-- HOME SECTION -->
+    <section id="home" class="hero">
+        <h1>Hi, I'm Your Name</h1>
+        <p>Java Developer | Spring Boot Learner | Web Developer</p>
+
+        <a href="#projects" class="btn">View My Work</a>
+    </section>
+
+    <!-- ABOUT SECTION -->
+    <section id="about">
+        <h2>About Me</h2>
+        <p>
+            I am learning Java, Spring Boot and Web Development.
+            I love building web applications and improving my coding skills.
+        </p>
+    </section>
+
+    <!-- SKILLS SECTION -->
+    <section id="skills">
+        <h2>Skills</h2>
+        <ul>
+            <li>HTML</li>
+            <li>CSS</li>
+            <li>Java</li>
+            <li>Spring Boot</li>
+        </ul>
+    </section>
+
+    <!-- PROJECTS SECTION -->
+    <section id="projects">
+        <h2>Projects</h2>
+
+        <div>
+            <h3>Project 1</h3>
+            <p>Simple Spring Boot Application</p>
+        </div>
+
+        <div>
+            <h3>Project 2</h3>
+            <p>Frontend Portfolio Website</p>
+        </div>
+    </section>
+
+    <!-- CONTACT SECTION -->
+    <section id="contact">
+        <h2>Contact Me</h2>
+
+        <form id="contactForm">
+            <input type="text" id="name" placeholder="Your Name" required><br>
+
+            <input type="email" id="email" placeholder="Your Email" required><br>
+
+            <textarea id="message" placeholder="Your Message" required></textarea><br>
+
+            <button type="submit">Send</button>
+        </form>
+
+        <p id="status"></p>
+    </section>
+
+    <!-- FOOTER -->
+    <footer style="text-align:center; padding:20px; background:#111827;">
+        <p>© 2026 My Portfolio</p>
+    </footer>
+
+    <!-- SPRING BOOT CONNECTION -->
+	<script>
+	let deferredPrompt;
+	const installBtn = document.createElement("button");
+
+	installBtn.innerText = "Install App";
+	installBtn.style.position = "fixed";
+	installBtn.style.bottom = "20px";
+	installBtn.style.right = "20px";
+	installBtn.style.padding = "12px 20px";
+	installBtn.style.background = "#38bdf8";
+	installBtn.style.border = "none";
+	installBtn.style.borderRadius = "8px";
+	installBtn.style.fontWeight = "bold";
+	installBtn.style.display = "none";
+	document.body.appendChild(installBtn);
+
+	// Contact form
+	document.getElementById("contactForm").addEventListener("submit", function (e) {
+	    e.preventDefault();
+
+	    fetch("http://localhost:8080/contact", {
+	        method: "POST",
+	        headers: {
+	            "Content-Type": "application/json"
+	        },
+	        body: JSON.stringify({
+	            name: document.getElementById("name").value,
+	            email: document.getElementById("email").value,
+	            message: document.getElementById("message").value
+	        })
+	    })
+	    .then(res => res.text())
+	    .then(data => {
+	        document.getElementById("status").innerText = data;
+	    })
+	    .catch(() => {
+	        document.getElementById("status").innerText = "Error sending message!";
+	    });
+	});
+
+	// SERVICE WORKER
+	if ("serviceWorker" in navigator) {
+	    navigator.serviceWorker.register("/service-worker.js")
+	        .then(() => console.log("SW registered"))
+	        .catch(console.error);
+	}
+
+	// INSTALL PROMPT (THIS IS THE KEY FIX)
+	window.addEventListener("beforeinstallprompt", (e) => {
+	    e.preventDefault();
+	    deferredPrompt = e;
+	    installBtn.style.display = "block";
+	});
+
+	installBtn.addEventListener("click", async () => {
+	    installBtn.style.display = "none";
+	    deferredPrompt.prompt();
+
+	    const choice = await deferredPrompt.userChoice;
+	    console.log(choice.outcome);
+
+	    deferredPrompt = null;
+	});
+	</script>
+</body>
+
+</html>
