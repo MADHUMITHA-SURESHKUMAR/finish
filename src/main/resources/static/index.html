@@ -199,24 +199,24 @@
 	document.getElementById("contactForm").addEventListener("submit", function (e) {
 	    e.preventDefault();
 
-	    fetch("fetch("/contact")", {
-	        method: "POST",
-	        headers: {
-	            "Content-Type": "application/json"
-	        },
-	        body: JSON.stringify({
-	            name: document.getElementById("name").value,
-	            email: document.getElementById("email").value,
-	            message: document.getElementById("message").value
-	        })
-	    })
-	    .then(res => res.text())
-	    .then(data => {
-	        document.getElementById("status").innerText = data;
-	    })
-	    .catch(() => {
-	        document.getElementById("status").innerText = "Error sending message!";
-	    });
+	   fetch("/contact", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+        name: document.getElementById("name").value,
+        email: document.getElementById("email").value,
+        message: document.getElementById("message").value
+    })
+})
+.then(response => response.text())
+.then(data => {
+    document.getElementById("status").innerText = data;
+})
+.catch(error => {
+    document.getElementById("status").innerText = "Error sending message!";
+});
 	});
 
 	// SERVICE WORKER
